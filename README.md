@@ -1,6 +1,7 @@
 # neural-networks
 A collection of various Neural Networks implemented using PyTorch. [Statistical Methods in AI, IIIT-H Monsoon'24]
 
+MLP has been implemented from scratch, while the rest have been implemented using PyTorch.
 These algorithms have been vectorized so that they run faster, and docstrings as well as comments are included.
 
 ## Pre-requisites
@@ -8,6 +9,7 @@ These algorithms have been vectorized so that they run faster, and docstrings as
 2. A package manager for `python` such as `pip` or `conda`.
 3. A virtual environment such as that created using `virtualenv` is recommended.
 4. All the packages mentioned in `requirements.txt`. If using `pip`, run ```pip install -r requirements.txt```.
+5. PyTorch (head over to https://pytorch.org/get-started/locally/ and install the correct version of PyTorch corresponding to your system configuration)
 
 ## Contents
 1. [Multi Layer Perceptron (MLP)](models/MLP/MLP.py)
