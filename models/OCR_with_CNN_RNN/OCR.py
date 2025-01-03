@@ -110,6 +110,9 @@ class CNNRNNOCRModel(nn.Module):
             print(f"Epoch {epoch + 1}: Train Loss = {avg_train_loss:.6f}, Val Loss = {val_loss:.6f}")
 
     def evaluate(self, loader: DataLoader, idx_to_char):
+        """
+        :param idx_to_char: A dictionary that defines the mapping from position to character in the encoded word tensor.
+        """
         self.eval()
         total_loss = 0
         total_correct_chars = 0
