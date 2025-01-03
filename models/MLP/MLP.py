@@ -32,13 +32,16 @@ class ActivationFunction:
 
 
 class MLP:
-    def __init__(self, objective: Literal['classification', 'multi-label classification', 'regression'], n_neurons_input_layer: int, n_neurons_output_layer: int,
+    def __init__(self, objective: Literal['classification', 'multi-label classification', 'regression'],
+                 n_neurons_input_layer: int, n_neurons_output_layer: int,
                  n_hidden_layers: int = 1, n_neurons_per_layer: list[int] = [20], learning_rate_init: float = 0.001,
-                 activation: Literal['sigmoid', 'tanh', 'relu', 'linear'] = 'relu', optimizer_type: Literal['sgd', 'bgd', 'mbgd'] = 'sgd', batch_size: int = 32, loss_type: Literal['MSE', 'BCE'] = None,
-                 max_iter: int = 200, random_state: int = None, tol: float = None, patience: int = 1,
-                 enable_logging: bool = False):
+                 activation: Literal['sigmoid', 'tanh', 'relu', 'linear'] = 'relu',
+                 optimizer_type: Literal['sgd', 'bgd', 'mbgd'] = 'sgd', batch_size: int = 32,
+                 loss_type: Literal['MSE', 'BCE'] = None, max_iter: int = 200, random_state: int = None,
+                 tol: float = None, patience: int = 1, enable_logging: bool = False):
         """
         Initialise a Multi-Layer Perceptron object for either classification or regression tasks.
+
         :param objective: Objective of our MLP. Choose from {'classification', 'multi-label classification', 'regression'}.
         :param n_neurons_input_layer: Number of neurons in the input layer. Should be as many as number of input features.
         :param n_neurons_output_layer: Number of neurons in the output layer. Should be as many as number of output features.
@@ -133,7 +136,8 @@ class MLP:
                              activation_vals: list) -> tuple[list, list]:
         m = X.shape[0]
 
-        if (self.objective == "classification" or self.objective == "multi-label classification") and self.loss_type is None:
+        if (
+                self.objective == "classification" or self.objective == "multi-label classification") and self.loss_type is None:
             delta = (y_hat - y)  # softmax's derivative, but also the case for multi-label.
         elif self.objective == "regression" or self.loss_type is not None:
             # initial delta val, computing separately as formula changes a lil bit later on

@@ -1,14 +1,16 @@
 """
 Reference: https://scikit-neuralnetwork.readthedocs.io/en/latest/module_ae.html
 """
+from typing import Literal
+
 from models.MLP.MLP import MLP
 import numpy as np
 
 
 class AutoEncoders:
     def __init__(self, n_features: int, n_reduced_features: int, n_hidden_layers: int = 1,
-                 n_neurons_per_layer: list[int] = [20], learning_rate: float = 0.001, activation: str = "sigmoid",
-                 optimizer_type: str = 'bgd', batch_size: int = 32, max_iter: int = 200, random_state: int = None,
+                 n_neurons_per_layer: list[int] = [20], learning_rate: float = 0.001, activation: Literal["sigmoid", "tanh", "relu", "linear"] = "sigmoid",
+                 optimizer_type: Literal["bgd", "mbgd", "sgd"] = 'bgd', batch_size: int = 32, max_iter: int = 200, random_state: int = None,
                  tol: float = None, patience: int = 1):
         """
         Initialize an AutoEncoder object. Uses my MLP for regression.

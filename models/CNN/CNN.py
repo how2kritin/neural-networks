@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from typing import Callable, Optional, Literal
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -8,12 +8,17 @@ import wandb
 
 
 class CNN(nn.Module):
-    def __init__(self, task: str, input_dim: int, n_inp_channels: int, n_outputs: int, learning_rate: float,
-                 dropout_rate: float, n_conv_layers: int, optimizer: str = 'adamw', activation: str = 'sigmoid',
+    def __init__(self, task: Literal['classification', 'regression', 'multi-class classification'], input_dim: int,
+                 n_inp_channels: int, n_outputs: int, learning_rate: float,
+                 dropout_rate: float, n_conv_layers: int, optimizer: Literal['sgd', 'adagrad', 'adamw'] = 'adamw',
+                 activation: Literal['relu', 'sigmoid', 'tanh'] = 'sigmoid',
                  n_epochs: int = 10, tol: float = 1e-4, patience: int = 3, round_outputs: bool = False,
-                 enable_logging: bool = False,
-                 get_regression_accuracy_for_evaluate: bool = False, random_state: int = 44):
+                 enable_logging: bool = False, get_regression_accuracy_for_evaluate: bool = False,
+                 random_state: int = 44):
         """
+        Use the train_model() method to train the model (training loop has been provided for ease of use).
+        Includes methods to visualize the feature maps, and also to plot the variation in training and validation loss.
+
         :param task: Must be one of {'classification', 'regression', 'multi-class classification'}.
         :param optimizer: adamw by default. Must be one of {'sgd', 'adagrad', 'adamw'}.
         :param activation: sigmoid by default. Must be one of {'relu', 'sigmoid', 'tanh'}.
@@ -156,6 +161,9 @@ class CNN(nn.Module):
             return self.activation_layers[-1](x)
 
     def train_model(self, train_loader: DataLoader, val_loader: Optional[DataLoader] = None) -> None:
+        """
+        A handy training loop so that you don't have to write your own. You can either use this, or use the encode() and decode() methods to train this model.
+        """
         best_val_loss = float('inf')
         curr_patience = 0
 

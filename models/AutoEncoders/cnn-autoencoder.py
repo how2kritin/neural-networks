@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Literal
 from tqdm import tqdm
 import torch
 from torch.utils.data import DataLoader
@@ -11,11 +11,16 @@ import matplotlib
 from typing import Callable
 import numpy as np
 
+
 class CnnAutoencoder(nn.Module):
     def __init__(self, learning_rate: float, conv_kernel_size: int, n_inp_channels: int,
-                 num_filters_per_layer: list[int], n_epochs: int = 5, patience: int = 2, optimizer: str = 'adamw',
+                 num_filters_per_layer: list[int], n_epochs: int = 5, patience: int = 2,
+                 optimizer: Literal['sgd', 'adagrad', 'adamw'] = 'adamw',
                  enable_logging: bool = False, random_state: int = 44):
         """
+        Use the train_model() method to train the model (training loop has been provided for ease of use).
+        Includes methods to plot the latent space, to compare original and reconstructed images, and also to plot the variation in training and validation loss.
+
         :param n_inp_channels: Number of input channels (e.g., 1 for grayscale, 3 for RGB)
         :param num_filters_per_layer: List of integers that defines the number of filters in each layer of the encoder. This will be reversed for the decoder.
         :param optimizer: adamw by default. Must be one of {'sgd', 'adagrad', 'adamw'}.
@@ -121,6 +126,9 @@ class CnnAutoencoder(nn.Module):
         return self.decode(*self.encode(x))
 
     def train_model(self, train_loader: DataLoader, val_loader: Optional[DataLoader] = None) -> None:
+        """
+        A handy training loop so that you don't have to write your own. You can either use this, or use the encode() and decode() methods to train this model.
+        """
         best_val_loss = float('inf')
         curr_patience = 0
 
@@ -226,9 +234,6 @@ class CnnAutoencoder(nn.Module):
         return encodings, labels
 
     def plot_latent_space(self, data_loader: DataLoader, max_num_entries_per_label: int = 10000) -> None:
-        """
-        Used GPT 4o to get the code for plotting.
-        """
         encodings, labels = self.get_latent_space(data_loader)
 
         selected_encodings = []
@@ -256,16 +261,16 @@ class CnnAutoencoder(nn.Module):
         plt.subplot(121)
 
         discrete_colors = [
-            '#1F77B4',  # Blue
-            '#FF7F0E',  # Orange
-            '#2CA02C',  # Green
-            '#D62728',  # Red
-            '#9467BD',  # Purple
-            '#8C564B',  # Brown
-            '#E377C2',  # Pink
-            '#7F7F7F',  # Gray
-            '#BCBD22',  # Olive
-            '#17BECF'  # Cyan
+            '#1F77B4',  # blue
+            '#FF7F0E',  # orange
+            '#2CA02C',  # green
+            '#D62728',  # red
+            '#9467BD',  # purple
+            '#8C564B',  # brown
+            '#E377C2',  # pink
+            '#7F7F7F',  # gray
+            '#BCBD22',  # olive green
+            '#17BECF'  # cyan
         ]
 
         # 2D plot

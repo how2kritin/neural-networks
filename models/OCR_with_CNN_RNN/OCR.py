@@ -8,6 +8,18 @@ class CNNRNNOCRModel(nn.Module):
     def __init__(self, n_epochs: int, vocab_size: int, max_sequence_length: int = 32,
                  learning_rate: float = 0.001, n_cnn_filters: list[int] = [32, 64, 128],
                  rnn_hidden_size: int = 256, rnn_n_layers: int = 2, device: str = "cpu"):
+        """
+        RNN model implemented using LSTM layers.
+        Includes a train_model() loop for ease of use.
+        Requires an encoded word tensor for the words as the words themselves might be too huge to predict. The DataLoader must specify appropriate encoding-decoding functions for the predictions.
+
+        :param n_epochs: Number of epochs this algorithm is supposed to run for in the training loop.
+        :param vocab_size: The size of the vocabulary in the dataset. Usually, it is the size of the char to index encoding dictionary,
+        :param max_sequence_length: Maximum length of any string sequence in the dataset.
+        :param n_cnn_filters: Number of filters in each CNN layer. Takes a list of values, and the length of this list determines the number of filters.
+        :param rnn_hidden_size: 256 by default. Size of each hidden layer in RNN.
+        :param rnn_n_layers: Number of RNN layers.
+        """
         super().__init__()
         self.n_epochs = n_epochs
         self.vocab_size = vocab_size
@@ -65,7 +77,10 @@ class CNNRNNOCRModel(nn.Module):
         output = self.fc(rnn_out)
         return output
 
-    def train_model(self, train_loader: DataLoader, val_loader: DataLoader, idx_to_char):
+    def train_model(self, train_loader: DataLoader, val_loader: DataLoader, idx_to_char: dict):
+        """
+        :param idx_to_char: A dictionary that defines the mapping from position to character in the encoded word tensor.
+        """
         for epoch in range(self.n_epochs):
             self.train()
             total_loss = 0
@@ -91,7 +106,7 @@ class CNNRNNOCRModel(nn.Module):
 
             val_loss = self.evaluate(val_loader, idx_to_char)
             avg_train_loss = total_loss / len(train_loader)
-            torch.save(model.state_dict(), 'cnn_rnn_bestmodel.pth')
+            torch.save(self.state_dict(), 'cnn_rnn_bestmodel.pth')
             print(f"Epoch {epoch + 1}: Train Loss = {avg_train_loss:.6f}, Val Loss = {val_loss:.6f}")
 
     def evaluate(self, loader: DataLoader, idx_to_char):

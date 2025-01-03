@@ -13,6 +13,18 @@ class RNN(nn.Module):
     def __init__(self, learning_rate: float, optimizer: Literal['sgd', 'adagrad', 'adamw'], n_features: int,
                  hidden_size: int, n_layers: int, dropout_rate: float = 0.0, n_epochs: int = 10,
                  enable_norm: bool = False, device: str = "cpu"):
+        """
+        RNN model implemented using LSTM layers.
+        Includes a train_model() loop as well as a predict_individual() and predict_batch() methods for ease of use.
+
+        :param optimizer: Choose an optimizer from {'sgd', 'adagrad', 'adamw'}.
+        :param n_features: Number of expected features in the input.
+        :param hidden_size: Number of features in the hidden state.
+        :param n_layers: Number of RNN layers.
+        :param dropout_rate: 0 by default. Set a value between 0 and 1 to enable dropout.
+        :param n_epochs: Number of epochs this algorithm is supposed to run for in the training loop.
+        :param enable_norm: False by default. Set to True to enable LayerNormalization.
+        """
         super(RNN, self).__init__()
         self.learning_rate = learning_rate
         self.n_epochs = n_epochs
